@@ -15,28 +15,9 @@ const GetAnalytics = async(req,res)=>{
     }
 
 }
-const PostAnalytics = async (req, res) => {
-    try {
-        const { ip, userAgent } = req.body;
-
-        if (!ip || !userAgent) {
-            return res.status(400).json({
-                data: [],
-                message: "Thiếu ip hoặc userAgent"
-            });
-        }
-
+const PostAnalytics = async (ip, userAgent) => {
         const newAnalytics = await Analytics.create({ ip, userAgent });
+        return newAnalytics;
 
-        return res.status(201).json({
-            data: newAnalytics,
-            message: "Thêm Analytics thành công!"
-        });
-    } catch (error) {
-        return res.status(500).json({
-            data: [],
-            message: error.message || "Có lỗi xảy ra!"
-        });
-    }
 };
 module.exports={GetAnalytics,PostAnalytics};

@@ -1,14 +1,14 @@
-const Lead = require("../model/Lead.model");
+const RequestDetail = require("../model/Lead.model");
 const { PostAnalytics } = require("./Analytics.controller");
-const GetLead = async (req, res) => {
+const GetRequestDetail = async (req, res) => {
     try {
-        const dataLead = await Lead.find({});
+        const dataLead = await RequestDetail.find({});
         return res.status(200).json({
             data: dataLead,
             message: "Lấy danh sách thành công!"
         })
     } catch (error) {
-        return res.status(400).json({
+        return res.status(500).json({
             data: [],
             message: error.message || 'Có lỗi xảy ra!',
         });
@@ -16,25 +16,32 @@ const GetLead = async (req, res) => {
     }
 
 }
-const PostLead = async (req, res) => {
+const PostRequestDetail = async (req, res) => {
     try {
-        const { email } = req.body;
+        let { email } = req.body;
 
         if (!email) {
             return res.status(400).json({
                 data: [],
-                message: "Thiếu dữ liệu"
+                message: "Thiếu dữ liệu email"
             });
         }
-        
+
+        const checkEmail = await RequestDetail.findOne({ email });
+        if (checkEmail) {
+            return res.status(409).json({
+                data: [],
+                message: "Bạn đã đăng ký nhận tài liệu trước đó!"
+            });
+        }
         const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
         const userAgent = req.headers['user-agent'];
         await PostAnalytics(ip, userAgent)
-        const newLead = await Lead.create({ email });
+        const newRequestDetail = await RequestDetail.create({ email });
 
         return res.status(201).json({
-            data: newLead,
-            message: "Thêm Lead thành công!"
+            data: newRequestDetail,
+            message: "Đăng ký nhận tài liệu thành công!"
         });
     } catch (error) {
         return res.status(500).json({
@@ -43,4 +50,5 @@ const PostLead = async (req, res) => {
         });
     }
 };
-module.exports = { GetLead, PostLead };
+
+module.exports = { GetRequestDetail, PostRequestDetail };
