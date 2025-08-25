@@ -39,4 +39,43 @@ const PostQuizQuestion = async (req, res) => {
         });
     }
 };
-module.exports={GetQuizQuestion,PostQuizQuestion};
+const CheckQuizAnswers = async (req, res) => {
+    try {
+        const { answers } = req.body;
+
+        if (!answers || !Array.isArray(answers)) {
+            return res.status(400).json({
+                data: [],
+                message: "Thiếu dữ liệu câu trả lời!"
+            });
+        }
+        const results = await Promise.all(
+            answers.map(async (ans) => {
+                const question = await QuizQuestion.findById(ans.questionId);
+                if (!question) return { correct: false };
+
+                return {
+                    questionId: ans.questionId,
+                    isCorrect: question.answer === ans.userAnswer
+                };
+            })
+        );
+        const correctCount = results.filter(r => r.isCorrect).length;
+
+        return res.status(200).json({
+            data: {
+                total: answers.length,
+                correct: correctCount,
+                details: results
+            },
+            message: "Chấm điểm thành công!"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            data: [],
+            message: error.message || "Có lỗi xảy ra!"
+        });
+    }
+};
+
+module.exports={GetQuizQuestion,PostQuizQuestion,CheckQuizAnswers};
