@@ -3,6 +3,7 @@ const connection = require('./config/db');
 const routeAPI= require('./route/routeAPI.route')
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 (async () => {
     try {
         await connection();

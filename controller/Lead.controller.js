@@ -16,31 +16,10 @@ const GetLead = async (req, res) => {
     }
 
 }
-const PostLead = async (req, res) => {
-    try {
-        const { email } = req.body;
-
-        if (!email) {
-            return res.status(400).json({
-                data: [],
-                message: "Thiếu dữ liệu"
-            });
-        }
-        
-        const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-        const userAgent = req.headers['user-agent'];
-        await PostAnalytics(ip, userAgent)
+const PostLead = async (email) => {
+    
         const newLead = await Lead.create({ email });
+        return newLead;
 
-        return res.status(201).json({
-            data: newLead,
-            message: "Thêm Lead thành công!"
-        });
-    } catch (error) {
-        return res.status(500).json({
-            data: [],
-            message: error.message || "Có lỗi xảy ra!"
-        });
-    }
 };
 module.exports = { GetLead, PostLead };
