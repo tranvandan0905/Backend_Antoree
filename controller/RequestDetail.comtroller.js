@@ -16,6 +16,40 @@ const GetRequestDetail = async (req, res) => {
     }
 
 }
+const UpdateRequestDetail = async (req, res) => {
+    try {
+        const _id = req.params.id;
+        const { isSent } = req.body;
+        const requestDetail = await RequestDetail.findById(_id);
+        if (!requestDetail) {
+            return res.status(404).json({
+                data: [],
+                message: "RequestDetail không tồn tại!"
+            });
+        }
+        const updatedRequestDetail = await RequestDetail.findByIdAndUpdate(
+            _id,
+            {
+                $set: {
+                    isSent: isSent !== undefined ? isSent : requestDetail.isSent,
+                    email: email || requestDetail.email,
+                },
+            },
+            { new: true }
+        );
+
+        return res.status(200).json({
+            data: updatedRequestDetail,
+            message: "Update thành công!"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            data: [],
+            message: error.message || 'Có lỗi xảy ra!',
+        });
+    }
+}
+
 const PostRequestDetail = async (req, res) => {
     try {
         let { email } = req.body;
@@ -51,4 +85,4 @@ const PostRequestDetail = async (req, res) => {
     }
 };
 
-module.exports = { GetRequestDetail, PostRequestDetail };
+module.exports = { GetRequestDetail, PostRequestDetail,UpdateRequestDetail };
