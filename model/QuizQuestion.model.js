@@ -1,5 +1,5 @@
 
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const quizQuestionSchema = new mongoose.Schema({
   question: { type: String, required: true },          
   options: [{ type: String, required: true }],        
@@ -7,4 +7,4 @@ const quizQuestionSchema = new mongoose.Schema({
   type: { type: String, default: "toeic" }             
 });
 
-export default mongoose.model("QuizQuestion", quizQuestionSchema);
+module.exports = mongoose.model("QuizQuestion", quizQuestionSchema);

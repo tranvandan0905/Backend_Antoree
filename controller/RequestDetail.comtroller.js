@@ -1,4 +1,4 @@
-const RequestDetail = require("../model/Lead.model");
+const RequestDetail = require("../model/RequestDetail.model");
 const { PostAnalytics } = require("./Analytics.controller");
 const GetRequestDetail = async (req, res) => {
     try {
@@ -34,9 +34,9 @@ const PostRequestDetail = async (req, res) => {
                 message: "Bạn đã đăng ký nhận tài liệu trước đó!"
             });
         }
-        const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-        const userAgent = req.headers['user-agent'];
-        await PostAnalytics(ip, userAgent)
+        // const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        // const userAgent = req.headers['user-agent'];
+        // await PostAnalytics(ip, userAgent)
         const newRequestDetail = await RequestDetail.create({ email });
 
         return res.status(201).json({

@@ -1,5 +1,5 @@
 const express = require("express");
-const { GetAnalytics } = require("../controller/Analytics.controller");
+const { GetAnalytics, PostAnalytics } = require("../controller/Analytics.controller");
 const { GetQuizQuestion, PostQuizQuestion, CheckQuizAnswers } = require("../controller/QuizQuestion.controller");
 const { GetLead } = require("../controller/Lead.controller");
 const { GetRequestDetail, PostRequestDetail } = require("../controller/RequestDetail.comtroller");

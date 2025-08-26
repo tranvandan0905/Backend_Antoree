@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const leadSchema = new mongoose.Schema({
   email: { type: String, required: true },
   score: { type: Number, required: true ,default: 1000000},    
@@ -6,4 +6,4 @@ const leadSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-export default mongoose.model("Lead", leadSchema);
+module.exports= mongoose.model("Lead", leadSchema);

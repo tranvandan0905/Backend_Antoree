@@ -1,5 +1,4 @@
 const Lead = require("../model/Lead.model");
-const { PostAnalytics } = require("./Analytics.controller");
 const GetLead = async (req, res) => {
     try {
         const dataLead = await Lead.find({});

@@ -1,5 +1,4 @@
-// analytics.model.js
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const analyticsSchema = new mongoose.Schema({
   ip: { type: String },               // IP người truy cập
@@ -7,4 +6,4 @@ const analyticsSchema = new mongoose.Schema({
   visitedAt: { type: Date, default: Date.now }
 });
 
-export default mongoose.model("Analytics", analyticsSchema);
+module.exports= mongoose.model("Analytics", analyticsSchema);

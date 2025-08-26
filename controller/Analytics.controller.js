@@ -16,6 +16,7 @@ const GetAnalytics = async(req,res)=>{
 
 }
 const PostAnalytics = async (ip, userAgent) => {
+    
         const newAnalytics = await Analytics.create({ ip, userAgent });
         return newAnalytics;
 
