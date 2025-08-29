@@ -1,9 +1,10 @@
 const express = require("express");
 const { GetAnalytics, PostAnalytics } = require("../controller/Analytics.controller");
 const { GetQuizQuestion, PostQuizQuestion, CheckQuizAnswers } = require("../controller/QuizQuestion.controller");
-const { GetLead, UpdateLead } = require("../controller/Lead.controller");
-const { GetRequestDetail, PostRequestDetail, UpdateRequestDetail } = require("../controller/RequestDetail.comtroller");
+const { GetLead, UpdateLead, stats } = require("../controller/Lead.controller");
+const { GetRequestDetail, PostRequestDetail, UpdateRequestDetail } = require("../controller/RequestDetail.controller");
 const { handleMoMoIPN, momo } = require("../controller/Banking.controller");
+const { PostAdmin, LoginAdmin } = require("../controller/Admin.controller");
 const routeAPI = express.Router();
 routeAPI.get('/analytics',GetAnalytics)
 routeAPI.get('/quizquestion',GetQuizQuestion)
@@ -19,4 +20,7 @@ routeAPI.put('/requestDetail/:id',UpdateRequestDetail)
 
 routeAPI.post('/momolead',momo);
 routeAPI.post('/momo/ipn',handleMoMoIPN);
+
+routeAPI.post('/admin',LoginAdmin);
+routeAPI.get('/stats',stats)
 module.exports=routeAPI;

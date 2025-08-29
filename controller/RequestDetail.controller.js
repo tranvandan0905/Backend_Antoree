@@ -32,7 +32,7 @@ const UpdateRequestDetail = async (req, res) => {
             {
                 $set: {
                     isSent: isSent !== undefined ? isSent : requestDetail.isSent,
-                    email: email || requestDetail.email,
+                    email: requestDetail.email,
                 },
             },
             { new: true }
@@ -55,7 +55,7 @@ const PostRequestDetail = async (req, res) => {
         let { email } = req.body;
 
         if (!email) {
-            return res.status(400).json({
+            return res.status(201).json({
                 data: [],
                 message: "Thiếu dữ liệu email"
             });
@@ -63,7 +63,7 @@ const PostRequestDetail = async (req, res) => {
 
         const checkEmail = await RequestDetail.findOne({ email });
         if (checkEmail) {
-            return res.status(409).json({
+            return res.status(201).json({
                 data: [],
                 message: "Bạn đã đăng ký nhận tài liệu trước đó!"
             });

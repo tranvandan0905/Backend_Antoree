@@ -1,7 +1,9 @@
 const express = require('express');
 const connection = require('./config/db');
 const routeAPI= require('./route/routeAPI.route')
+const cors = require('cors');
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 (async () => {

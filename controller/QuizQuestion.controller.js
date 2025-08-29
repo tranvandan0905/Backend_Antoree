@@ -1,20 +1,35 @@
 const QuizQuestion = require("../model/QuizQuestion.model")
-const GetQuizQuestion = async(req,res)=>{
-    try {
-        const dataQuizQuestion= await QuizQuestion.find({});
-        return res.status(200).json({
-            data: dataQuizQuestion,
-            message: "Lấy danh sách thành công!"
-        })
-    } catch (error) {
-        return res.status(400).json({
-                data: [],
-                message: error.message || 'Có lỗi xảy ra!',
-            });
+const GetQuizQuestion = async (req, res) => {
+  try {
+    const { type } = req.query;
 
+    if (!type) {
+      return res.status(400).json({
+        errorCode: 1,
+        data: [],
+        message: "Thiếu type!"
+      });
     }
+    const dataQuizQuestion = await QuizQuestion.aggregate([
+      { $match: { type } },
+      { $sample: { size: 10 } },
+    ]);
 
-}
+    return res.status(200).json({
+      errorCode: 0,
+      data: dataQuizQuestion,
+      message: "Lấy danh sách thành công!",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      errorCode: 1,
+      data: [],
+      message: error.message || "Có lỗi xảy ra!",
+    });
+  }
+};
+
+
 const PostQuizQuestion = async (req, res) => {
     try {
         const { question,options,answer,type} = req.body;

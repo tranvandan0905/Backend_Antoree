@@ -12,8 +12,8 @@ const momo = async (req, res) => {
     const secretKey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
     const partnerCode = "MOMO";
     const orderInfo = "Thanh toán xu bằng MoMo";
-    const redirectUrl = "http://localhost:3000/banking/momo-success";
-    const ipnUrl = "http://localhost:5000/api/momo/ipn"; 
+    const redirectUrl = "http://localhost:3000";
+    const ipnUrl = "http://localhost:5000/api/momo/ipn";
     const requestType = "payWithMethod";
     const orderId = partnerCode + Date.now();
     const requestId = orderId;
@@ -59,6 +59,9 @@ const momo = async (req, res) => {
     };
 
     const response = await axios(option);
+    if (response.data && response.data.resultCode === 0 && response.data.payUrl) {
+      await axios.post(ipnUrl, {email: email, resultCode: 0,});
+    }
     return res.status(200).json(response.data);
   } catch (error) {
     console.error("MoMo Create Error:", error.response?.data || error.message);
@@ -66,29 +69,15 @@ const momo = async (req, res) => {
   }
 };
 
-// Xử lý IPN (callback từ MoMo)
 const handleMoMoIPN = async (req, res) => {
   try {
-    const data = req.body && Object.keys(req.body).length > 0 ? req.body : req.query;
-    console.log("MoMo IPN Data:", data);
-
-    const { resultCode, message, extraData } = data;
-
+    const { resultCode,email } = req.body;
     if (parseInt(resultCode) !== 0) {
       return res.status(400).json({ message: "MoMo thông báo thanh toán thất bại", detail: message });
     }
-
-    let email = null;
-    if (extraData) {
-      const decoded = Buffer.from(extraData, "base64").toString("utf8");
-      const parsed = JSON.parse(decoded);
-      email = parsed.email;
-    }
-
     if (email) {
       await PostLead(email);
     }
-
     return res.status(200).json({
       message: "Giao dịch MoMo thành công, tài liệu sẽ gửi đến bạn trong thời gian tới!"
     });
